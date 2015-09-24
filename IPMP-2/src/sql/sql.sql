@@ -11,15 +11,15 @@ create table meet(meet_id varchar(50) primary key,
 create table meetroom(meetroom_id varchar(50) primary key,
                 meetroom_name varchar(50),
                 meetroom_addr varchar(100),
-                available_state int(1),
-                now_state int(1),
-                meet_num int(4));
+                available_state varchar(4),
+              
+                meet_num varchar(8));
 
 
 create table facility(facility_id varchar(50) primary key,
                 facility_name varchar(200),
-                on_state int(1),
-                available_state int(1),
+               
+                available_state varchar(4),
                 meetroom_id varchar(50));
 
 
@@ -27,7 +27,7 @@ create table user(u_id varchar(50) primary key,
                 u_name varchar(50),
                 u_department varchar(100),
                 u_phone varchar(50),
-                u_gender int(1));
+                u_gender varchar(4));
 
 
 create table file(file_id varchar(50) primary key,
@@ -44,6 +44,6 @@ create table history(history_id varchar(50) primary key,
 create table admin(a_id varchar(50)primary key,
 		   a_name varchar(50),
 		   a_psd varchar(50),
-		   a_priority int(1));
+		   a_priority varchar(4));
 
 

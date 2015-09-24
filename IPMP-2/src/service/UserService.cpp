@@ -84,9 +84,14 @@ int UserService::Update(User user){
 int UserService::DeleteSignle(string u_id){
 	string sql="delete from user where u_id="+Utils::AddSingleQuoteMark(u_id);
 	DBConn db;
-	db.Execute_mysql(sql);
-	db.Close_mysql();
-	return 400;
+	if(db.Execute_mysql(sql)==0){
+		db.Close_mysql();
+			return 400;
+	}else{
+		db.Close_mysql();
+			return 401;
+	}
+
 }
 
 int UserService::SelectUserExist(string u_id){

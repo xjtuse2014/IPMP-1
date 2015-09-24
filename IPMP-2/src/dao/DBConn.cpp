@@ -51,10 +51,7 @@ int DBConn::Connect_mysql() {
  */
 string DBConn::Query_mysql(string querySQL) {
 	string result;
-	cout << querySQL << endl;
-	if (mysql_real_query(&mysql, querySQL.c_str(),
-			(unsigned int) strlen(querySQL.c_str())) == 0) {
-
+	if (mysql_real_query(&mysql, querySQL.c_str(),(unsigned int) strlen(querySQL.c_str())) == 0) {
 		res = mysql_store_result(&mysql);
 		while (row = mysql_fetch_row(res)) {
 			for (t = 0; t < mysql_num_fields(res); t++) {

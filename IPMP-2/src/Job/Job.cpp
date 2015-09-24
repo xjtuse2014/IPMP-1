@@ -83,7 +83,20 @@ void* Job::WorkThread(void* connect_fd){
 		if(fac.getOp()=="selectFacility"){
 			string res=fs.SelectAll();
 			send(conn_fd, res.c_str(), (unsigned int) strlen(res.c_str()), 0);
-			cout<<"the res is :"<<res<<endl;
+			cout<<"the selectFacility res is :"<<res<<endl;
+		}else if(fac.getOp()=="selectSFacility"){
+			string res=fs.SelectSignle(fac.getFacilityId());
+			send(conn_fd, res.c_str(), (unsigned int) strlen(res.c_str()), 0);
+				cout<<"the  selectSFacility res is :"<<res<<endl;
+		}else if(fac.getOp()=="addFacility"){
+			int res=fs.Add(fac);
+			char buff[20];
+			memset(buff,0,20);
+			sprintf(buff,"%d",res);
+			send(conn_fd, buff, 26, 0);
+			cout<<"the  addFacility res is :"<<res<<endl;
+		}else if(fac.getOp()=="deleteFacility"){
+			int res=fs.DeleteSignle(fac.getFacilityId());
 		}
 	}
 	break;

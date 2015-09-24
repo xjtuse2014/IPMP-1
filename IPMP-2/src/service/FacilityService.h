@@ -62,10 +62,10 @@ public:
 		 string SelectSignle(string facility_id);
 		 /**
 		  *查询记录是否存在
-		  *@return -1：存在 0：不存在
 		  */
-		 int SelectFacilityExist(string facility_id,string facility_ip);
 		 int SelectFacilityExist(string facility_id);
+		 int SelectFacilityExist(string facility_id,string facility_ip);
+		 int SelectFacilityExist(string facility_id,string facility_ip,string meetroom_id);
 public:
 	FacilityService();
 	virtual ~FacilityService();
