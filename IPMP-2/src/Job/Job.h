@@ -9,9 +9,15 @@
 #define JOB_H_
 #include "../utils/univer.h"
 #include "../utils/Utils.h"
+#include "../utils/constant.h"
+#include "../bean/User.h"
+#include "../bean/Admin.h"
+#include "../bean/Facility.h"
 #include "../utils/json/json.h"
+
 #include "../service/UserService.h"
 #include "../service/AdminService.h"
+#include "../service/FacilityService.h"
 class Job {
 private:
 	int sockfd;

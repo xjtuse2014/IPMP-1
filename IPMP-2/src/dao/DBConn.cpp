@@ -127,7 +127,8 @@ string DBConn::Query_all_mysql(string sql, string ObjectName) {
 //			printf("\n");
 			userNum++;
 		}
-		root["userNum"] = Json::Value(userNum);
+//		string flaf_num=ObjectName+string("Num");
+		root["Num"] = Json::Value(userNum);
 		root[ObjectName] = arrayObj;
 //		cout << "the result set is:" << endl << root.toStyledString() << endl;
 		return root.toStyledString();
@@ -274,5 +275,6 @@ int DBConn::Update_user_mysql(string u_id,string u_name,string u_department,stri
  mysql> alter table cc change id id int primary key auto_increment;
  show columns from 表名;
   alter table 表名 modify column 字段名 类型;
+  alter table e_down add soft_version1 varchar(50) ／／z增加一个字段
  */
 

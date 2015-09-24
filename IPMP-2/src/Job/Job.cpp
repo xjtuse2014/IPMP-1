@@ -6,8 +6,7 @@
  */
 
 #include "Job.h"
-#include "../utils/constant.h"
-#include "../bean/User.h"
+
 Job::Job() {
 	// TODO Auto-generated constructor stub
 
@@ -77,12 +76,22 @@ void* Job::WorkThread(void* connect_fd){
 
 	switch(object)
 	{
+	case 0:{
+		Facility fac;
+		FacilityService fs;
+		fac=fs.GetParasFRomJson(receive);
+		if(fac.getOp()=="selectFacility"){
+			string res=fs.SelectAll();
+			send(conn_fd, res.c_str(), (unsigned int) strlen(res.c_str()), 0);
+			cout<<"the res is :"<<res<<endl;
+		}
+	}
+	break;
 	case 1:
 	{
 		User user;
 		UserService us;
 		user=us.GetParasFRomJson(receive);
-//		cout<<"user:"<<user.getPhone()<<endl;
 		if(user.getOp()==SELECT_ALL_USER){
 			string res=us.SelectAll();
 			send(conn_fd, res.c_str(), (unsigned int) strlen(res.c_str()), 0);
@@ -125,83 +134,5 @@ void* Job::WorkThread(void* connect_fd){
 		}
 	}
 		break;
-
-	}
-/*
-	if (op == "login") {
-		DBConn* conn = new DBConn();
-		string s1 = "select m_psd from ipmp_user where m_name='" + name + "'";
-		string res = conn->Query_mysql(s1);
-		conn->Close_mysql();
-		if (conn != NULL) {
-			delete conn;
-			conn = NULL;
-		}
-		cout << "res:" << res << endl;
-		if (res == psd) {
-			//login succeed
-			send(conn_fd, "100\n", 52, 0);
-			cout << "return:100" << endl;
-		} else {
-			//login failed
-			send(conn_fd, "101\n", 52, 0);
-			cout << "return:101" << endl;
-		}
-	} else if (op == "addUser") {
-		DBConn conn;
-		string s1 =
-				"insert into ipmp_user(m_name,m_psd,m_department,m_phone)values('"
-						+ name + "','" + psd + "','" + department + "','"
-						+ phone + "')";
-		// check if the new user exists
-		cout << "addUser sql:" << s1 << endl;
-		int r = conn.Insert_mysql(s1);
-		if (r == 0) {
-			send(conn_fd, "200", 52, 0);
-		} else {
-			send(conn_fd, "201", 52, 0);
-		}
-		conn.Close_mysql();
-	} else if (op == "selectUser") {
-		DBConn db;
-		string sql = "select u_id,u_nameu from user ";
-		string result = db.Query_all_mysql(sql);
-		cout << "result:" << result << endl;
-		db.Close_mysql();
-		cout << "length:" << (unsigned int) strlen(result.c_str()) << endl;
-		send(conn_fd, result.c_str(), (unsigned int) strlen(result.c_str()), 0);
-	} else if (op == "updateUser") {
-		DBConn db;
-		// update t1 set age=100 where name='wa';
-		string sql = "update ipmp_user set m_phone='"+ phone + "',m_authority='" + authority + "',m_department='"+ department + "' where m_name='"+name+"'";
-		cout<<"updateUser sql:"<<sql<<endl;
-		int rc = db.Execute_mysql(sql);
-		if (rc == 0) {
-			//更新成功
-			send(conn_fd, "300", 26, 0);
-		} else {
-			//更新失败
-			send(conn_fd, "301", 26, 0);
-		}
-	} else if (op == "deleteUser") {
-		DBConn db;
-		// update t1 set age=100 where name='wa';
-		string sql = "delete from ipmp_user where m_name='" + name + "'";
-		int rc = db.Execute_mysql(sql);
-		if (rc == 0) {
-			//更新成功
-			send(conn_fd, "400", 26, 0);
-			cout << "删除了一个用户：" << endl;
-		} else {
-			//更新失败
-			send(conn_fd, "401", 26, 0);
-		}
-	}else if(op=="selectSUser"){
-		DBConn db;
-		string result = db.Query_single_mysql(name);
-		send(conn_fd, result.c_str(), (unsigned int) strlen(result.c_str()), 0);
-		cout<<"selectSUser:"<<result<<endl;
-		db.Close_mysql();
-	}
-	*/
+}
 }
