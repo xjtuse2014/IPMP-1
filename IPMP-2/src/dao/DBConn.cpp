@@ -55,11 +55,11 @@ string DBConn::Query_mysql(string querySQL) {
 		res = mysql_store_result(&mysql);
 		while (row = mysql_fetch_row(res)) {
 			for (t = 0; t < mysql_num_fields(res); t++) {
-				printf("%s\t", row[t]);
+//				printf("%s\t", row[t]);
 				result = row[t];
 			}
-			printf("query successful\n");
-			printf("\n");
+//			printf("query successful\n");
+//			printf("\n");
 		}
 		return result;
 	} else {
@@ -150,7 +150,7 @@ int DBConn::Insert_mysql(string sql) {
 /**
  * 执行SQL
  */int DBConn::Execute_mysql(string sql) {
-	if (!mysql_query(&mysql, sql.c_str())) {
+	if (mysql_query(&mysql, sql.c_str())!=-1) {
 		cout << mysql_errno(&mysql) << endl;
 		cout << mysql_error(&mysql) << endl;
 		return 0;
@@ -177,11 +177,9 @@ string DBConn::Query_single_mysql(string sql) {
 		field = mysql_fetch_fields(res);
 		while (row = mysql_fetch_row(res)) {	//mysql_fetch_row取结果集的下一行
 			for (t = 0; t < mysql_num_fields(res); t++) {	//结果集的列的数量
-//				printf("field[t].name,row[t]:%s,%s\n", field[t].name, row[t]);
 				item[field[t].name] = Json::Value(row[t]);
 			}
 		}
-		cout << "the single user's info set is:" << endl<< item.toStyledString() << endl;
 		return item.toStyledString();
 	}
 }

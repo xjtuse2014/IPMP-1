@@ -51,7 +51,20 @@
 #define DELETE_SINGLE_USER_SQL "delete from user where u_id="
 #define ADD_USER_SQL "insert into user(u_id,u_name,u_department,u_phone,u_gender)values"
 
+/**
+ * table: meetroom
+ */
+#define SELECT_SINGLE_MR_SQL "select * from meetroom where meetroom_id="
+#define SELECT_ALL_MR_SQL "select * from meetroom"
+#define DELETE_ALL_MR_SQL "delete from meetroom"
+#define DELETE_SINGLE_MR_SQL "delete from meetroom where meetroom_id="
+#define ADD_MR_SQL "insert into meetroom(meetroom_id,meetroom_name,meetroom_addr,available_state,meet_num)values('"
+#define SELECT_MR_ID_SQL "select meetroom_id from meetroom where meetroom_id="
 
+/**
+ *  string str="{0}hello,{1},welcome to CHINA!";
+ *  str=String,Format(str,"claire","deal");
+ */
 
 
 #endif /* UTILS_CONSTANT_H_ */

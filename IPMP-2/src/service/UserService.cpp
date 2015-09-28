@@ -73,11 +73,11 @@ int UserService::Update(User user){
 	DBConn db;
 	if(db.Execute_mysql(sql)==0){
 		db.Close_mysql();
-		return 0;
+		return 220;
 	}else{
 
 		db.Close_mysql();
-		return -1;
+		return 221;
 	}
 }
 
@@ -86,10 +86,10 @@ int UserService::DeleteSignle(string u_id){
 	DBConn db;
 	if(db.Execute_mysql(sql)==0){
 		db.Close_mysql();
-			return 400;
+			return 210;
 	}else{
 		db.Close_mysql();
-			return 401;
+			return 211;
 	}
 
 }

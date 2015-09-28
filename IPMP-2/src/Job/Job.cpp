@@ -97,6 +97,16 @@ void* Job::WorkThread(void* connect_fd){
 			cout<<"the  addFacility res is :"<<res<<endl;
 		}else if(fac.getOp()=="deleteFacility"){
 			int res=fs.DeleteSignle(fac.getFacilityId());
+			char buff[20];
+			memset(buff,0,20);
+			sprintf(buff,"%d",res);
+			send(conn_fd, buff, 26, 0);
+		}else if(fac.getOp()=="updateFacility"){
+			int res=fs.Update(fac);
+			char buff[20];
+			memset(buff,0,20);
+			sprintf(buff,"%d",res);
+			send(conn_fd, buff, 26, 0);
 		}
 	}
 	break;
@@ -112,11 +122,11 @@ void* Job::WorkThread(void* connect_fd){
 			string res=us.SelectSignle(user.getId());
 			send(conn_fd, res.c_str(), (unsigned int) strlen(res.c_str()), 0);
 		}else if(user.getOp()==UPDATE_USER){
-			if(us.Update(user)==0){
-				send(conn_fd, "300", 26, 0);
-			}else{
-				send(conn_fd, "301", 26, 0);
-			}
+			int res=us.Update(user);
+			char buff[20];
+			memset(buff,0,20);
+			sprintf(buff,"%d",res);
+			send(conn_fd,buff, 26, 0);
 		}else if(user.getOp()==DELETE_USER){
 			int res=us.DeleteSignle(user.getId());
 			char buff[20];
