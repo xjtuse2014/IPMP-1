@@ -16,7 +16,10 @@ MeetroomService::~MeetroomService() {
 	// TODO Auto-generated destructor stub
 }
 
-
+/**
+ * @params id table
+ * @return eg: a user's all parameters of the Json format
+ */
 string MeetroomService::SelectSignle(string mr_id){
 	DBConn db;
 	string sql=SELECT_SINGLE_MR_SQL+Utils::AddSingleQuoteMark(mr_id);
@@ -30,11 +33,13 @@ Meetroom MeetroomService::GetParasFRomJson(string json){
 		Json::Value root;
 		Meetroom mr;
 		if(reader.parse(json,root)){
+				mr.setOp(root["m_op"].asString());
 				mr.setAvailableState(root["available_state"].asString());
 				mr.setMeetNum(root["meet_num"].asString());
 				mr.setMeetroomAddr(root["meetroom_addr"].asString());
 				mr.setMeetroomId(root["meetroom_id"].asString());
 				mr.setMeetroomName(root["meetroom_name"].asString());
+				mr.setMeetroomRemark(root["meetroom_remark"].asString());
 	    }
 		return mr;
 }
@@ -55,12 +60,10 @@ int MeetroomService::Add(Meetroom mr){
 	}else{
 		return 401;//ID重复
 	}
-
-
 }
 string MeetroomService::SelectAll(){
 	DBConn db;
-	string res=db.Query_all_mysql(SELECT_ALL_MR_SQL,"Meetrooms");
+	string res=db.Query_all_mysql(SELECT_ALL_MR_SQL,"Meetroom");
 	db.Close_mysql();
 	return res;
 }
@@ -79,7 +82,7 @@ int MeetroomService::Update(Meetroom mr){
 }
 
 int MeetroomService::DeleteSignle(string mr_id){
-	string sql="delete from meetroom where meetroom_id="+Utils::AddSingleQuoteMark(mr_id);
+	string sql=DELETE_SINGLE_MR_SQL+Utils::AddSingleQuoteMark(mr_id);
 	DBConn db;
 	if(db.Execute_mysql(sql)==0){
 		db.Close_mysql();
@@ -96,9 +99,7 @@ int MeetroomService::SelectMeetroomExist(string mr_id){
 	string sql=SELECT_MR_ID_SQL+Utils::AddSingleQuoteMark(mr_id);
 	string res=db.Query_mysql(sql);
 	if(res.empty()==true){
-		cout<<"无重复，可插入！"<<endl;
 		return 0;
 	}
-	cout<<"重复，不可插入！"<<endl;
 	return -1;
 }

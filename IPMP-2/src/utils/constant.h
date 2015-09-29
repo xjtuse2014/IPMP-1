@@ -28,6 +28,15 @@
 #define SELECT_ALL_ADMIN "selectAdmin"
 #define LOGIN "login"
 
+/**
+ *meetroom
+ * m_op
+ */
+#define ADD_MEETROOM "addMeetroom"
+#define DELETE_MEETROOM "deleteMeetroom"
+#define UPDATE_MEETROOM "updateMeetroom"
+#define SELECT_SINGLE_MEETROOM "selectSMeetroom"
+#define SELECT_ALL_MEETROOM "selectMeetroom"
 
 
 /**

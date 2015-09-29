@@ -9,16 +9,19 @@
 #define BEAN_MEETROOM_H_
 #include "../utils/univer.h"
 class Meetroom {
-private:
+
 private:
 	string meetroom_id;
 	string meetroom_name;
 	string meetroom_addr;
 	string available_state;
 	string meet_num;
+	string meetroom_remark;
+	string m_op;
 public:
 	Meetroom();
 	virtual ~Meetroom();
+
 
 	const string& getAvailableState() const {
 		return available_state;
@@ -58,6 +61,22 @@ public:
 
 	void setMeetroomName(const string& meetroomName) {
 		meetroom_name = meetroomName;
+	}
+
+	const string& getOp() const {
+		return m_op;
+	}
+
+	void setOp(const string& op) {
+		m_op = op;
+	}
+
+	const string& getMeetroomRemark() const {
+		return meetroom_remark;
+	}
+
+	void setMeetroomRemark(const string& meetroomRemark) {
+		meetroom_remark = meetroomRemark;
 	}
 };
 

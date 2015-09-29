@@ -19,30 +19,20 @@ DBConn::DBConn(MYSQL mysql) {
 }
 
 DBConn::~DBConn() {
-//	if (res != NULL) {
-//		delete res;
-//		res = NULL;
-//	}
-//	if (row != NULL) {
-//		row = NULL;
-//	}
 
 }
 
 void DBConn::Init_mysql() {
-//	printf("init_mysql ...  \n");
 	mysql_init(&mysql);
 }
 
 int DBConn::Connect_mysql() {
-	if (!mysql_real_connect(&mysql, "localhost", "root", "123456", "ipmp", 0,
-			NULL, 0)) {
-		printf("Connect failed\n");
+	if (!mysql_real_connect(&mysql, "localhost", "root", "123456", "ipmp", 0,NULL, 0)) {
+		printf("Connect failed!\n");
 		cout << mysql_errno(&mysql) << endl;
 		cout << mysql_error(&mysql) << endl;
 		return -1;
 	}
-	printf("Connect successful\n");
 	return 0;
 }
 
@@ -55,11 +45,8 @@ string DBConn::Query_mysql(string querySQL) {
 		res = mysql_store_result(&mysql);
 		while (row = mysql_fetch_row(res)) {
 			for (t = 0; t < mysql_num_fields(res); t++) {
-//				printf("%s\t", row[t]);
 				result = row[t];
 			}
-//			printf("query successful\n");
-//			printf("\n");
 		}
 		return result;
 	} else {
@@ -92,7 +79,6 @@ string DBConn::Query_mysql(string querySQL) {
  * }
  *
  */
-
 string DBConn::Query_all_mysql(string sql, string ObjectName) {
 	Json::Value root;
 	Json::Value arrayObj;
@@ -116,24 +102,19 @@ string DBConn::Query_all_mysql(string sql, string ObjectName) {
 		int i = 1;
 		while (row = mysql_fetch_row(res)) {	//mysql_fetch_row取结果集的下一行
 			for (t = 0; t < mysql_num_fields(res); t++) {	//结果集的列的数量
-//				printf("field[t].name,row[t]:%s,%s\n", field[t].name, row[t]);
 				item[field[t].name] = Json::Value(row[t]);
 			}
 			arrayObj.append(item);
 			item.clear();
-//			printf("\n");
 			userNum++;
 		}
-//		string flaf_num=ObjectName+string("Num");
 		root["Num"] = Json::Value(userNum);
 		root[ObjectName] = arrayObj;
-//		cout << "the result set is:" << endl << root.toStyledString() << endl;
 		return root.toStyledString();
 	}
 }
 
 void DBConn::Close_mysql() {
-	//mysql_free_result(res);
 	mysql_close(&mysql);
 }
 
@@ -156,7 +137,7 @@ int DBConn::Insert_mysql(string sql) {
 		return 0;
 	} else {
 		cout << mysql_errno(&mysql) << endl;
-				cout << mysql_error(&mysql) << endl;
+		cout << mysql_error(&mysql) << endl;
 		return -1;
 	}
 }
@@ -183,80 +164,7 @@ string DBConn::Query_single_mysql(string sql) {
 		return item.toStyledString();
 	}
 }
-/*
-int DBConn::Insert_user_mysql(char u_id, char u_name, char u_department,char u_phone, int u_gender) {
-	MYSQL_STMT *stmt = mysql_stmt_init(&mysql);
-	char* sql = "insert into user values(?,?,?,?,?)";
-	if (mysql_stmt_prepare(stmt, sql, strlen(sql))) {
-		fprintf(stderr, "mysql_stmt_prepare:%s\n", mysql_error(&mysql));
-		return -1;
-	}
-	 MYSQL_BIND params[5];
-	memset(params, 0, sizeof(params));
-	params[0].buffer_type = MYSQL_TYPE_VARCHAR;
-	params[0].buffer = (char*)u_id;
 
-	params[1].buffer_type = MYSQL_TYPE_VARCHAR;
-	params[1].buffer = (char*)u_name;
-
-	params[2].buffer_type = MYSQL_TYPE_VARCHAR;
-	params[2].buffer = (char*)u_department;
-
-	params[3].buffer_type = MYSQL_TYPE_VARCHAR;
-	params[3].buffer = (char*)u_phone;
-
-	params[4].buffer_type = MYSQL_TYPE_INT24;
-	params[4].buffer = (int*)u_gender;
-
-	cout<<"params:"<<params;
-	mysql_stmt_bind_param(stmt,params);
-
-	if(mysql_stmt_execute(stmt)==0){
-			mysql_stmt_close(stmt);
-			return 0;
-		}else{
-			fprintf(stderr, "mysql_stmt_prepare:%s\n", mysql_error(&mysql));
-			return -1;
-		}
-}
-
-int DBConn::Update_user_mysql(string u_id,string u_name,string u_department,string u_phone,int u_gender){
-
-	MYSQL_STMT *stmt = mysql_stmt_init(&mysql);
-		char* sql = "update user set u_name=?,u_department=?, u_phone=?,u_gender=? where u_id=?";
-		if (mysql_stmt_prepare(stmt, sql, strlen(sql))) {
-			fprintf(stderr, "mysql_stmt_prepare:%s\n", mysql_error(&mysql));
-			return -1;
-		}
-		MYSQL_BIND params[5];
-		memset(params, 0, sizeof(params));
-		//name
-		params[0].buffer_type = MYSQL_TYPE_VARCHAR;
-		params[0].buffer = &u_name;
-		//department
-		params[1].buffer_type = MYSQL_TYPE_VARCHAR;
-		params[1].buffer = &u_department;
-		//phone
-		params[2].buffer_type = MYSQL_TYPE_VARCHAR;
-		params[2].buffer = &u_phone;
-		//gender
-		params[3].buffer_type = MYSQL_TYPE_INT24;
-		params[3].buffer = &u_gender;
-		//id
-		params[4].buffer_type = MYSQL_TYPE_VARCHAR;
-		params[4].buffer = &u_id;
-
-		mysql_stmt_bind_param(stmt,params);
-			if(mysql_stmt_execute(stmt)==0){
-				mysql_stmt_close(stmt);
-				return 0;
-			}else{
-				return -1;
-			}
-
-	return 0;
-}
-*/
 /**
  * select * from t1;
  * create table t2(name char(15),age int);

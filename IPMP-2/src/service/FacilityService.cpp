@@ -37,10 +37,7 @@ int FacilityService::Add(Facility fac) {
 					+ fac.getFacilityId() + "','" + fac.getFacilityName()
 					+ "','" + fac.getAvailableState() + "','"
 					+ fac.getMeetroomId() + "','" + fac.getFacilityIp() + "')";
-	cout << "addFac sql:" << sql << endl;
-	int check = this->SelectFacilityExist(fac.getFacilityId(),
-			fac.getFacilityIp(), fac.getMeetroomId());
-	cout << "check res is :" << check << endl;
+	int check = this->SelectFacilityExist(fac.getFacilityId(),fac.getFacilityIp(), fac.getMeetroomId());
 	DBConn db;
 	if (check == 300) {
 		db.Execute_mysql(sql);
@@ -65,33 +62,24 @@ string FacilityService::SelectAll() {
  */
 int FacilityService::SelectFacilityExist(string id, string ip, string mr_id) {
 	string sql = "select  facility_id from facility where facility_id=" + Utils::AddSingleQuoteMark(id);
-	cout << "check sql:" << sql << endl;
 	string sql1 = "select  meetroom_id from facility where facility_ip="	+ Utils::AddSingleQuoteMark(ip);
-	cout << "check sql:" << sql1 << endl;
 	DBConn db;
 	string facility_id = db.Query_mysql(sql);
 	db.Close_mysql();
-
 	if (ip.empty() || mr_id.empty()) {//用户增加一个设备仅填写ID的情况
-		cout << "SelectFacilityExist ip.empty() || mr_id.empty()" << endl;
 		if (facility_id.empty()) {
-			cout<<"SelectFacilityExist():500"<<"facility_id.empty():"<<facility_id.empty()<<endl;
 			return 300;
 		} else {
-			cout<<"SelectFacilityExist():501"<<endl;
 			return 301; //ID已存在
 		}
 	} else {
-		cout << "SelectFacilityExist() ----------------------" << endl;
 		if (facility_id.empty()) {
 			DBConn db;
 			string meetroom_id = db.Query_mysql(sql1);
 			db.Close_mysql();
 			if (meetroom_id == mr_id) {
-				cout<<"SelectFacilityExist():502"<<endl;
 				return 302; //IP重复
 			} else {
-				cout<<"SelectFacilityExist():500"<<endl;
 				return 300;
 			}
 		} else {
@@ -121,9 +109,7 @@ int FacilityService::SelectFacilityExist(string id, string ip, string mr_id) {
 
 int FacilityService::SelectFacilityExist(string id, string ip) {
 	string sql = "select  facility_name from facility where facility_id=" + Utils::AddSingleQuoteMark(id);
-	cout << "check sql:" << sql << endl;
 	string sql1 = "select  facility_id from facility where facility_ip=" + Utils::AddSingleQuoteMark(ip);
-	cout << "check sql:" << sql1 << endl;
 
 	DBConn db;
 	string res_name = db.Query_mysql(sql);
@@ -146,7 +132,6 @@ int FacilityService::Update(Facility fac) {
 			+ "',available_state='" + fac.getAvailableState()
 			+ "',meetroom_id='" + fac.getMeetroomId() + "',facility_ip='"
 			+ fac.getFacilityIp() + "'where facility_id="+Utils::AddSingleQuoteMark(fac.getFacilityId());
-	cout << "update Facility sql:" << sql << endl;
 	DBConn db;
 	if (db.Execute_mysql(sql) == 0) {
 		db.Close_mysql();

@@ -9,6 +9,7 @@
 #define BEAN_FACILITY_H_
 #include "../utils/univer.h"
 class Facility {
+private:
 	string facility_id;
 	string facility_name;
 
