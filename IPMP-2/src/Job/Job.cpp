@@ -23,21 +23,17 @@ int Job::StartJob(){
 			perror("1:建立socke失败！\n");
 			exit(1);
 		}
-//		printf("建立服务器socket成功!\n");
 		my_addr.sin_family = AF_INET;
 		my_addr.sin_port = htons(8000);
 		inet_aton("202.117.10.82", &my_addr.sin_addr);
-//		bzero(&(my_addr.sin_zero),8);
 		if(bind(sockfd, (struct sockaddr*) &my_addr, sizeof(my_addr))==-1){
 			perror("2：绑定失败!\n");
 			exit(1);
 		}
-//		printf("绑定成功！\n");
 		if( listen(sockfd, 10 ) == -1){
 			perror("监听失败！\n");
 			exit(1);
 		}
-//		printf("监听成功！\n");
 		while (true) {
 			socklen_t len;
 			if((client_fd = accept(sockfd, (struct sockaddr*) &remote_addr, &len)) == -1){
@@ -48,7 +44,6 @@ int Job::StartJob(){
 				len = sizeof(remote_addr);
 				printf("somebody connected:%d,IP:%s, PORT:%u\n", client_fd,inet_ntoa(remote_addr.sin_addr),ntohs(remote_addr.sin_port));
 				pthread_create(&thread_id, NULL, WorkThread, &client_fd);
-				cout<<"thread_id:"<<thread_id<<endl;
 				pthread_join(thread_id, NULL);
 			}
 		}
@@ -56,7 +51,6 @@ int Job::StartJob(){
 }
 
 void* Job::WorkThread(void* connect_fd){
-	cout << "connect..." << endl;
 	int conn_fd = *(int*) connect_fd;
 	char buff[4096],utf8buff[4096];
 	int n = recv(conn_fd, buff, 4096, 0);
@@ -77,31 +71,30 @@ void* Job::WorkThread(void* connect_fd){
 		Facility fac;
 		FacilityService fs;
 		fac=fs.GetParasFRomJson(receive);
-		if(fac.getOp()=="selectFacility"){
+		if(fac.getOp()==SELECT_ALL_FACILITY){
 			string res=fs.SelectAll();
 			send(conn_fd, res.c_str(), (unsigned int) strlen(res.c_str()), 0);
-			cout<<"the selectFacility res is :"<<res<<endl;
-		}else if(fac.getOp()=="selectSFacility"){
+		}else if(fac.getOp()==SELECT_SINGLE_FACILITY){
 			string res=fs.SelectSignle(fac.getFacilityId());
 			send(conn_fd, res.c_str(), (unsigned int) strlen(res.c_str()), 0);
-				cout<<"the  selectSFacility res is :"<<res<<endl;
-		}else if(fac.getOp()=="addFacility"){
+		}else if(fac.getOp()==ADD_FACILITY){
 			int res=fs.Add(fac);
-			char buff[20];
-			memset(buff,0,20);
+			char buff[20];memset(buff,0,20);
 			sprintf(buff,"%d",res);
 			send(conn_fd, buff, 26, 0);
-			cout<<"the  addFacility res is :"<<res<<endl;
-		}else if(fac.getOp()=="deleteFacility"){
+		}else if(fac.getOp()==DELETE_FACILITY){
 			int res=fs.DeleteSignle(fac.getFacilityId());
-			char buff[20];
-			memset(buff,0,20);
+			char buff[20];memset(buff,0,20);
 			sprintf(buff,"%d",res);
 			send(conn_fd, buff, 26, 0);
-		}else if(fac.getOp()=="updateFacility"){
+		}else if(fac.getOp()==UPDATE_FACILITY){
 			int res=fs.Update(fac);
-			char buff[20];
-			memset(buff,0,20);
+			char buff[20];memset(buff,0,20);
+			sprintf(buff,"%d",res);
+			send(conn_fd, buff, 26, 0);
+		}else if(fac.getOp()==UPDATE_FACILITY_FOR_ROOM){
+			int res=fs.UpdateForRoom(fac.getFacilityId(),fac.getMeetroomId());
+			char buff[20];memset(buff,0,20);
 			sprintf(buff,"%d",res);
 			send(conn_fd, buff, 26, 0);
 		}

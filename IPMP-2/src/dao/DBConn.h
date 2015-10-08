@@ -16,6 +16,8 @@ using namespace std;
 #include <string.h>
 #include  <mysql/mysql.h>
 #include "../utils/json/json.h"
+#include "../utils/constant.h"
+#include "../utils/Utils.h"
 class DBConn{
 public:
 	MYSQL mysql;
@@ -55,7 +57,8 @@ public:
 	 *}
 	 */
 	string Query_all_mysql(string sql,string ObjectName);
-
+	string Query_all_mr_mysql(string sql,string OgjectName);//查询meetroom
+	string Query_single_mr_sql(string sql);
 	int Execute_mysql(string sql);
 	int Insert_mysql(string sql);
 //	int Insert_user_mysql(char u_id,char u_name,char u_department,char u_phone,int u_gender);

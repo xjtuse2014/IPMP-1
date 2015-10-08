@@ -126,7 +126,7 @@ int FacilityService::SelectFacilityExist(string id, string ip) {
 	}
 }
 
-//更新设备成功 700 失败701
+//更新设备成功 320 失败321
 int FacilityService::Update(Facility fac) {
 	string sql = "update facility set facility_name='" + fac.getFacilityName()
 			+ "',available_state='" + fac.getAvailableState()
@@ -161,4 +161,15 @@ int FacilityService::DeleteSignle(string id) {
 		return 311;
 	}
 
+}
+//为会议室添加设备 成功
+int FacilityService::UpdateForRoom(string id,string mr_id){
+	string sql = "update facility set meetroom_id = '"  + mr_id + "' where facility_id = " + Utils::AddSingleQuoteMark(id);
+	DBConn db;
+	if (db.Execute_mysql(sql) == 0) {
+		db.Close_mysql();
+		return 330;
+	} else
+		db.Close_mysql();
+	return 331;
 }

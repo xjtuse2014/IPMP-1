@@ -26,6 +26,7 @@ public:
 		 * 更新一条记录
 		 */
 		 int Update(Facility facility);
+		 int UpdateForRoom(string facility_id,string mr_id);
 		/**
 		 * 删除一条记录
 		 */

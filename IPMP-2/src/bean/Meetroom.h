@@ -15,13 +15,12 @@ private:
 	string meetroom_name;
 	string meetroom_addr;
 	string available_state;
-	string meet_num;
-	string meetroom_remark;
+	string meetroom_size;
+	string meetroom_remark; //备注
 	string m_op;
 public:
 	Meetroom();
 	virtual ~Meetroom();
-
 
 	const string& getAvailableState() const {
 		return available_state;
@@ -31,13 +30,6 @@ public:
 		available_state = availableState;
 	}
 
-	const string& getMeetNum() const {
-		return meet_num;
-	}
-
-	void setMeetNum(const string& meetNum) {
-		meet_num = meetNum;
-	}
 
 	const string& getMeetroomAddr() const {
 		return meetroom_addr;
@@ -77,6 +69,14 @@ public:
 
 	void setMeetroomRemark(const string& meetroomRemark) {
 		meetroom_remark = meetroomRemark;
+	}
+
+	const string& getMeetroomSize() const {
+		return meetroom_size;
+	}
+
+	void setMeetroomSize(const string& meetroomSize) {
+		meetroom_size = meetroomSize;
 	}
 };
 

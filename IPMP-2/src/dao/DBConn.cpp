@@ -27,7 +27,8 @@ void DBConn::Init_mysql() {
 }
 
 int DBConn::Connect_mysql() {
-	if (!mysql_real_connect(&mysql, "localhost", "root", "123456", "ipmp", 0,NULL, 0)) {
+	if (!mysql_real_connect(&mysql, "localhost", "root", "123456", "ipmp", 0,
+	NULL, 0)) {
 		printf("Connect failed!\n");
 		cout << mysql_errno(&mysql) << endl;
 		cout << mysql_error(&mysql) << endl;
@@ -41,7 +42,8 @@ int DBConn::Connect_mysql() {
  */
 string DBConn::Query_mysql(string querySQL) {
 	string result;
-	if (mysql_real_query(&mysql, querySQL.c_str(),(unsigned int) strlen(querySQL.c_str())) == 0) {
+	if (mysql_real_query(&mysql, querySQL.c_str(),
+			(unsigned int) strlen(querySQL.c_str())) == 0) {
 		res = mysql_store_result(&mysql);
 		while (row = mysql_fetch_row(res)) {
 			for (t = 0; t < mysql_num_fields(res); t++) {
@@ -114,6 +116,45 @@ string DBConn::Query_all_mysql(string sql, string ObjectName) {
 	}
 }
 
+string DBConn::Query_all_mr_mysql(string sql, string name) {
+
+	Json::Value root;
+	Json::Value arrayObj;
+	Json::Value item;
+	int t = mysql_real_query(&mysql, sql.c_str(),
+			(unsigned int) strlen(sql.c_str()));
+	if (t == -1) {
+		cout << "query failed:%s\n" << mysql_errno(&mysql)
+				<< mysql_error(&mysql) << endl;
+	} else {
+		res = mysql_store_result(&mysql); //返回查询的全部结果集
+		//获取表的列数
+		//int numb=mysql_num_fields(res);
+		//printf("name: %s   count: %d\n", namebuf[i], rows);
+
+		//获取并输出表头
+		field = mysql_fetch_fields(res);
+		//int length=mysql_fetch_lengths(res);
+		int length = mysql_num_rows(res);
+		int num = 0;
+		int i = 1;
+		while (row = mysql_fetch_row(res)) {	//mysql_fetch_row取结果集的下一行
+			for (t = 0; t < mysql_num_fields(res); t++) {	//结果集的列的数量
+				if (field[t].name != "meetroom_remark") {
+					item[field[t].name] = Json::Value(row[t]);
+				}
+			}
+			arrayObj.append(item);
+			item.clear();
+			num++;
+		}
+		root["Num"] = Json::Value(num);
+		root[name] = arrayObj;
+		return root.toStyledString();
+	}
+
+}
+
 void DBConn::Close_mysql() {
 	mysql_close(&mysql);
 }
@@ -124,14 +165,15 @@ int DBConn::Insert_mysql(string sql) {
 		return 0;
 	} else {
 		cout << mysql_errno(&mysql) << endl;
-						cout << mysql_error(&mysql) << endl;
+		cout << mysql_error(&mysql) << endl;
 		return -1;
 	}
 }
 /**
  * 执行SQL
- */int DBConn::Execute_mysql(string sql) {
-	if (mysql_query(&mysql, sql.c_str())!=-1) {
+ */
+int DBConn::Execute_mysql(string sql) {
+	if (mysql_query(&mysql, sql.c_str()) != -1) {
 		cout << mysql_errno(&mysql) << endl;
 		cout << mysql_error(&mysql) << endl;
 		return 0;
@@ -165,6 +207,75 @@ string DBConn::Query_single_mysql(string sql) {
 	}
 }
 
+string DBConn::Query_single_mr_sql(string mr_id) {
+	string mr_sql = SELECT_SINGLE_MR_SQL + Utils::AddSingleQuoteMark(mr_id);
+	string fac_sql = SELECT_SINGLE_MR_FACILITY_SQL
+			+ Utils::AddSingleQuoteMark(mr_id);
+	//查询可添加设备SQL
+	string add_fac_sql=SELECT_MR_ADD_FACILITY_SQL;
+	Json::Value Mr;
+	Json::Value arrayObj, item;//已有设备
+	Json::Value arrayAdd, fac;//已有设备
+	int t = mysql_real_query(&mysql, mr_sql.c_str(),
+			(unsigned int) strlen(mr_sql.c_str()));
+	if (t == -1) {
+		cout << "query failed:" << mysql_errno(&mysql) << mysql_error(&mysql)
+				<< endl;
+	} else {
+		res = mysql_store_result(&mysql);	//返回查询的全部结果集
+		field = mysql_fetch_fields(res);
+		while (row = mysql_fetch_row(res)) {	//mysql_fetch_row取结果集的下一行
+			for (t = 0; t < mysql_num_fields(res); t++) {	//结果集的列的数量
+				Mr[field[t].name] = Json::Value(row[t]);
+			}
+		}
+		mysql_free_result(res);
+	}
+	//查询已有设备
+	int num = 0;
+	int t2 = mysql_real_query(&mysql, fac_sql.c_str(),
+			(unsigned int) strlen(fac_sql.c_str()));
+	if (t2 == -1) {
+		cout << "query failed:" << mysql_errno(&mysql) << mysql_error(&mysql)
+				<< endl;
+	} else {
+		res = mysql_store_result(&mysql);	//返回查询的全部结果集
+		field = mysql_fetch_fields(res);
+		while (row = mysql_fetch_row(res)) {	//mysql_fetch_row取结果集的下一行
+			for (t = 0; t < mysql_num_fields(res); t++) {	//结果集的列的数量
+				item[field[t].name] = Json::Value(row[t]);
+			}
+			arrayObj.append(item);
+			item.clear();
+			num++;
+		}
+		Mr["Num"] = Json::Value(num);
+		Mr["facility"] = Json::Value(arrayObj);
+
+	}
+	//查询可添加设备
+		int addNum = 0;
+		int t1 = mysql_real_query(&mysql, add_fac_sql.c_str(),
+				(unsigned int) strlen(add_fac_sql.c_str()));
+		if (t1 == -1) {
+			cout << "query failed:" << mysql_errno(&mysql) << mysql_error(&mysql)
+					<< endl;
+		} else {
+			res = mysql_store_result(&mysql);	//返回查询的全部结果集
+			field = mysql_fetch_fields(res);
+			while (row = mysql_fetch_row(res)) {	//mysql_fetch_row取结果集的下一行
+				for (t = 0; t < mysql_num_fields(res); t++) {	//结果集的列的数量
+					fac[field[t].name] = Json::Value(row[t]);
+				}
+				arrayAdd.append(fac);
+				fac.clear();
+				addNum++;
+			}
+			Mr["addNum"] = Json::Value(addNum);
+			Mr["addFacility"] = Json::Value(arrayAdd);
+		}
+	return Mr.toStyledString();
+}
 /**
  * select * from t1;
  * create table t2(name char(15),age int);
@@ -177,7 +288,7 @@ string DBConn::Query_single_mysql(string sql) {
  修改:
  mysql> alter table cc change id id int primary key auto_increment;
  show columns from 表名;
-  alter table 表名 modify column 字段名 类型;
-  alter table e_down add soft_version1 varchar(50) ／／z增加一个字段
+ alter table 表名 modify column 字段名 类型;
+ alter table e_down add soft_version1 varchar(50) ／／z增加一个字段
  */
 

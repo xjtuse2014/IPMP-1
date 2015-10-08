@@ -22,8 +22,7 @@ MeetroomService::~MeetroomService() {
  */
 string MeetroomService::SelectSignle(string mr_id){
 	DBConn db;
-	string sql=SELECT_SINGLE_MR_SQL+Utils::AddSingleQuoteMark(mr_id);
-	string res=db.Query_single_mysql(sql);
+	string res=db.Query_single_mr_sql(mr_id);
 	db.Close_mysql();
 	return res;
 }
@@ -35,7 +34,7 @@ Meetroom MeetroomService::GetParasFRomJson(string json){
 		if(reader.parse(json,root)){
 				mr.setOp(root["m_op"].asString());
 				mr.setAvailableState(root["available_state"].asString());
-				mr.setMeetNum(root["meet_num"].asString());
+				mr.setMeetroomSize(root["meetroom_size"].asString());
 				mr.setMeetroomAddr(root["meetroom_addr"].asString());
 				mr.setMeetroomId(root["meetroom_id"].asString());
 				mr.setMeetroomName(root["meetroom_name"].asString());
@@ -49,7 +48,7 @@ int MeetroomService::Add(Meetroom mr){
 	int tmp=this->SelectMeetroomExist(mr.getMeetroomId());
 	if(tmp==0){
 		string sql=ADD_MR_SQL+ mr.getMeetroomId() + "','" +mr.getMeetroomName()+ "','" +mr.getMeetroomAddr() +
-						"','"+mr.getAvailableState() +"','"+mr.getMeetNum()+ "')";
+						"','"+mr.getAvailableState() +"','"+mr.getMeetroomSize()+ "')";
 			DBConn db;
 			if(db.Execute_mysql(sql)==0){
 				db.Close_mysql();
@@ -69,7 +68,7 @@ string MeetroomService::SelectAll(){
 }
 int MeetroomService::Update(Meetroom mr){
 
-	string sql = "update meetroom set meetroom_name='"+ mr.getMeetroomName() + "',meetroom_addr='" + mr.getMeetroomAddr() + "',available_state='"+ mr.getAvailableState() + "',meet_num='"+mr.getMeetNum()+"' where meetroom_id='"+mr.getMeetroomId()+"'";
+	string sql = "update meetroom set meetroom_name='"+ mr.getMeetroomName() + "',meetroom_addr='" + mr.getMeetroomAddr() + "',available_state='"+ mr.getAvailableState() + "',meetroom_size='"+mr.getMeetroomSize()+"' where meetroom_id='"+mr.getMeetroomId()+"'";
 	cout<<"update sql:"<<sql<<endl;
 	DBConn db;
 	if(db.Execute_mysql(sql)==0){

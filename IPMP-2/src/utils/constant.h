@@ -38,19 +38,18 @@
 #define SELECT_SINGLE_MEETROOM "selectSMeetroom"
 #define SELECT_ALL_MEETROOM "selectMeetroom"
 
-
 /**
- *object:  1->User 2->MRoom 3->Meeting 4->History 5->File 6->Facility
+ *facility
+ * m_op 0
  */
-/*
-#define  USER 1
-#define  Meetroom 2
-#define Meeting 3
-#define History 4
-#define File 5
-#define Facilitry 6
-#define ADMIN 7
-*/
+#define UPDATE_FACILITY_FOR_ROOM "updateFMR"
+#define ADD_FACILITY "addFacility"
+#define DELETE_FACILITY "deleteFacility"
+#define UPDATE_FACILITY "updateFacility"
+#define SELECT_SINGLE_FACILITY "selectSFacility"
+#define SELECT_ALL_FACILITY "selectFacility"
+
+
  /**
  * table: user
  */
@@ -64,12 +63,13 @@
  * table: meetroom
  */
 #define SELECT_SINGLE_MR_SQL "select * from meetroom where meetroom_id="
+#define SELECT_SINGLE_MR_FACILITY_SQL "select * from facility where meetroom_id="
 #define SELECT_ALL_MR_SQL "select * from meetroom"
 #define DELETE_ALL_MR_SQL "delete from meetroom"
 #define DELETE_SINGLE_MR_SQL "delete from meetroom where meetroom_id="
-#define ADD_MR_SQL "insert into meetroom(meetroom_id,meetroom_name,meetroom_addr,available_state,meet_num)values('"
+#define ADD_MR_SQL "insert into meetroom(meetroom_id,meetroom_name,meetroom_addr,available_state,meetroom_size)values('"
 #define SELECT_MR_ID_SQL "select meetroom_id from meetroom where meetroom_id="
-
+#define SELECT_MR_ADD_FACILITY_SQL "select facility_id from facility where meetroom_id=''"
 /**
  *  string str="{0}hello,{1},welcome to CHINA!";
  *  str=String,Format(str,"claire","deal");

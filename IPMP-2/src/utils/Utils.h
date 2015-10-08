@@ -29,6 +29,8 @@ public:
 	  * 添加单引号
 	  */
 	 static string AddSingleQuoteMark(string words);
+
+
 };
 
 #endif /* UTILS_UTILS_H_ */
